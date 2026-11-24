@@ -77,7 +77,9 @@ const callCacheVersion = "calls-v15"
 // lead's (piSubagentsRead).
 // agy 2, antigravity 2: a call carries its time to the first token and
 // how long it took, from its step's row (stepTimesOf).
-var callParseVersions = map[string]int{"agy": 2, "antigravity": 2, "cindy": 2, "codex": 3, "pi": 1, "raft": 1, "zcode": 4}
+// antigravity 3: a call carries its vendor response id, so a response
+// mirrored into several conversations is counted once (local dedupe).
+var callParseVersions = map[string]int{"agy": 2, "antigravity": 3, "cindy": 2, "codex": 3, "pi": 1, "raft": 1, "zcode": 4}
 
 // CallCacheVersion is callCacheVersion and callParseVersions, for a cache
 // of what is made of the calls (usage's requests-v1.bin and heatmap): a

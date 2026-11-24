@@ -266,6 +266,12 @@ func callsFor(since time.Time, session, agent string) []Call {
 		return files[i].path < files[j].path
 	})
 	seen := map[string]bool{}
+	// Antigravity writes the same vendor response into more than one
+	// conversation database (a mirrored/forked run). Msg includes the
+	// session, so those copies survive the identity check below and were
+	// counted twice. Files are ordered oldest first, so the first copy
+	// owns the response and later mirrors are dropped.
+	seenAntigravityResponse := map[string]bool{}
 	capacity := 0
 	callsMu.Lock()
 	for _, f := range files {
@@ -284,6 +290,12 @@ func callsFor(since time.Time, session, agent string) []Call {
 		}
 		st := readCalls(f)
 		for _, c := range st.Calls {
+			if c.Agent == "antigravity" && c.ResponseID != "" {
+				if seenAntigravityResponse[c.ResponseID] {
+					continue
+				}
+				seenAntigravityResponse[c.ResponseID] = true
+			}
 			if c.Msg != "" {
 				if seen[c.Msg] {
 					continue

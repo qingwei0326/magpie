@@ -529,6 +529,10 @@ func readAntigravityCalls(f file) (*callFile, bool) {
 		st.Calls = append(st.Calls, Call{
 			Agent: "antigravity", Time: c.at, Session: st.Session, Model: c.model, Tokens: c.tokens,
 			TTFT: t.ttft, Millis: t.millis,
+			// The app can mirror one vendor response into more than one
+			// conversation database. Keep its id so callsFor can count
+			// that response once across all Antigravity sessions.
+			ResponseID: c.response,
 			Msg: st.str("antigravity:" + st.Session + ":" + strconv.FormatInt(c.step, 10)),
 		})
 	}
